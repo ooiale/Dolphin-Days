@@ -1,16 +1,71 @@
-# dolphin_days
+# 🐬 Dolphin Days
 
-A new Flutter project.
+<img src="assets/images/TitleLogo.png" alt="Dolphin Days Logo" width="300" />
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+**Dolphin Days** is a to-do list app designed to help you create and check off tasks throughout your day, all wrapped in a relaxing underwater theme. Featuring animated dolphins, soothing visuals, and an intuitive interface, Dolphin Days makes productivity a little more peaceful.
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 🚀 Getting Started
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+To get a local copy up and running, follow these simple steps.
+
+### ✅ Prerequisites
+
+- [Flutter SDK](https://flutter.dev/docs/get-started/install)
+- A code editor like [VS Code](https://code.visualstudio.com/) or [Android Studio](https://developer.android.com/studio)
+- An emulator or connected device for running the app
+
+### 🔧 Installation
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/yourusername/dolphin_days.git
+   ```
+
+2. **Navigate to the project directory**:
+   ```bash
+   cd dolphin_days
+   ```
+
+3. **Install dependencies**:
+   ```bash
+   flutter pub get
+   ```
+
+4. **Run the app**:
+   ```bash
+   flutter run
+   ```
+
+---
+
+## 📁 Project Structure
+
+```plaintext
+dolphin_days/
+├── assets/
+│   ├── images/
+│   │   └── dolphins/
+│   └── lotties/
+├── lib/
+│   ├── data/
+│   │   ├── classes/
+│   │   └── enums/
+│   ├── utils/
+│   └── views/
+│       ├── pages/
+│       └── widgets/
+├── pubspec.yaml
+```
+
+---
+
+## 🛠️ Built With
+
+- [Flutter](https://flutter.dev/)
+- [Dart](https://dart.dev/)
+- [Material Design](https://m3.material.io/)
+
+---
