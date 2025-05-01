@@ -1,5 +1,10 @@
 # 🐬 Dolphin Days
 
+<p align="center">
+  <img src="assets/images/TitleLogo.png" alt="Dolphin Days Logo" width="300" />
+</p>
+
+
 **Dolphin Days** is a to-do list app designed to help you create and check off tasks throughout your day, all wrapped in a relaxing underwater theme. Featuring animated dolphins, soothing visuals, and an intuitive interface, Dolphin Days makes productivity a little more peaceful.
 
 ---
