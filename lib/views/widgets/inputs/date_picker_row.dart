@@ -18,17 +18,16 @@ class DatePickerRow extends StatelessWidget {
         RichText(
           text: TextSpan(
             children: [
+              TextSpan(text: 'Date: ', style: AppTextFonts.boldGrayLabelStyle),
               TextSpan(
-                text: 'Date: ',
-                style: AppTextFonts.boldGrayLabelStyle,
-              ),
-              TextSpan(
-                text: selectedDate != null
-                    ? "${selectedDate!.toLocal()}".split(' ')[0]
-                    : "Not selected",
-                style: selectedDate != null
-                    ? AppTextFonts.boldWhiteTextStyle
-                    : AppTextFonts.boldGrayLabelStyle,
+                text:
+                    selectedDate != null
+                        ? "${selectedDate!.toLocal()}".split(' ')[0]
+                        : "Not selected",
+                style:
+                    selectedDate != null
+                        ? AppTextFonts.boldGreenTextStyle.copyWith(fontSize: 22)
+                        : AppTextFonts.boldGrayLabelStyle,
               ),
             ],
           ),
@@ -36,7 +35,7 @@ class DatePickerRow extends StatelessWidget {
         Spacer(),
         TextButton(
           onPressed: onSelectDate,
-          child: Text('Select Date'),
+          child: Text('Select Date', style: TextStyle(color: Colors.black)),
         ),
       ],
     );

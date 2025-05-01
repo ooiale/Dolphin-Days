@@ -1,20 +1,77 @@
+import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:dolphin_days/data/services/task_hive_service.dart';
+import 'package:dolphin_days/data/classes/task_class.dart';
+import 'package:dolphin_days/data/themes/text_fonts.dart';
 import 'package:dolphin_days/data/themes/app_theme.dart';
 import 'package:dolphin_days/views/pages/tasks/edit_task_page.dart';
 import 'package:dolphin_days/views/widgets/task_widgets/task_date_card.dart';
 import 'package:dolphin_days/views/widgets/task_widgets/task_priority_chip.dart';
-import 'package:flutter/material.dart';
-import 'package:dolphin_days/data/classes/task_class.dart';
-import 'package:dolphin_days/data/services/task_hive_service.dart';
-import 'package:dolphin_days/data/themes/text_fonts.dart';
 import 'package:dolphin_days/views/widgets/task_widgets/task_status_header.dart';
 import 'package:dolphin_days/views/widgets/task_widgets/task_time_card.dart';
 import 'package:dolphin_days/views/widgets/task_widgets/task_property_card.dart';
 import 'package:dolphin_days/views/widgets/task_widgets/task_delete_dialog.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
-/// Task detail page that displays all information about a specific task
-///
-/// Uses [ValueListenableBuilder] to automatically update when task changes
+// Shared underwater gradient and scaffold wrapper
+const _underwaterGradient = LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: [
+    Color(0xFF1B2A49), // Deep ocean
+    Color(0xFF3A8DAF), // Mid-water
+    Color(0xFFB4E1E8), // Surface
+  ],
+);
+
+class UnderwaterScaffold extends StatelessWidget {
+  final PreferredSizeWidget? appBar;
+  final Widget body;
+  final Widget? bottomNavigationBar;
+
+  const UnderwaterScaffold({
+    super.key,
+    this.appBar,
+    required this.body,
+    this.bottomNavigationBar,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      extendBody: true,
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
+      appBar: appBar,
+      body: Stack(
+        children: [
+          // 1) Gradient base
+          Container(
+            decoration: const BoxDecoration(gradient: _underwaterGradient),
+          ),
+
+          // 2) Bubble layer
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.3,
+              child: Lottie.asset(
+                'assets/lotties/bubbles.json',
+                fit: BoxFit.cover,
+                repeat: true,
+              ),
+            ),
+          ),
+
+          // 3) Content
+          SafeArea(child: body),
+        ],
+      ),
+      bottomNavigationBar: bottomNavigationBar,
+    );
+  }
+}
+
+/// Detailed view of a single task with underwater theming
 class TaskDetailPage extends StatelessWidget {
   final String taskId;
 
@@ -45,11 +102,9 @@ class _TaskDetailContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDarkMode = theme.brightness == Brightness.dark;
-
-    return Scaffold(
-      appBar: _buildAppBar(context, theme),
+    // Use underwater scaffold
+    return UnderwaterScaffold(
+      appBar: _buildAppBar(context),
       body: Column(
         children: [
           TaskStatusHeader(task: task),
@@ -57,62 +112,73 @@ class _TaskDetailContent extends StatelessWidget {
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _buildDescriptionCard(AppTheme.cardColor(isDarkMode)),
-                  buildDateCard(context, AppTheme.cardColor(isDarkMode)),
+                  _buildDescriptionCard(),
+                  const SizedBox(height: 8),
+                  _buildDateCard(context),
+                  const SizedBox(height: 8),
                   if (task.startTime != null || task.endTime != null)
-                    _buildTimeCards(context, AppTheme.cardColor(isDarkMode)),
-                  _buildPropertiesRow(AppTheme.cardColor(isDarkMode)),
-                  if (task.notes?.isNotEmpty ?? false)
-                    _buildNotesCard(AppTheme.cardColor(isDarkMode)),
+                    _buildTimeCards(context),
+                  const SizedBox(height: 8),
+                  _buildPropertiesRow(context),
+                  if (task.notes?.isNotEmpty ?? false) ...[
+                    const SizedBox(height: 8),
+                    _buildNotesCard(),
+                  ],
                 ],
               ),
             ),
           ),
-          _buildCompletionButton(context, theme),
         ],
       ),
+      bottomNavigationBar: _buildCompletionButton(context),
     );
   }
 
-  AppBar _buildAppBar(BuildContext context, ThemeData theme) {
+  AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       title: Text('Task Details', style: AppTextFonts.boldWhiteTextStyle),
-      backgroundColor: AppTheme.primaryDark,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      flexibleSpace: Container(
+        decoration: const BoxDecoration(gradient: _underwaterGradient),
+      ),
       actions: [
         IconButton(
-          icon: Icon(Icons.edit, color: theme.colorScheme.secondary),
+          icon: Icon(
+            Icons.edit,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
           onPressed: () => _navigateToEdit(context),
         ),
         IconButton(
           icon: Icon(Icons.delete, color: AppTheme.warningRed),
-          onPressed:
-              () => showDialog(
-                context: context,
-                builder:
-                    (context) => TaskDeleteDialog(
-                      task: task,
-                      onDelete: () {
-                        HiveService.deleteTask(task.id);
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      },
-                    ),
-              ),
+          onPressed: () => _showDelete(context),
         ),
       ],
     );
   }
 
-  Widget _buildDescriptionCard(Color cardColor) {
+  Widget _buildDescriptionCard() {
     return TaskPropertyCard(
-      color: cardColor,
+      color: Colors.black.withAlpha(166),
       label: 'Description',
       child: Text(task.description, style: AppTextFonts.boldWhiteTextStyle),
     );
   }
 
-  Widget _buildTimeCards(BuildContext context, Color cardColor) {
+  Widget _buildDateCard(BuildContext context) {
+    return TaskDateCard(
+      context: context,
+      date: task.date,
+      label: 'Date',
+      icon: Icons.calendar_today,
+      color: Colors.black.withAlpha(166),
+    );
+  }
+
+  Widget _buildTimeCards(BuildContext context) {
     return Row(
       children: [
         if (task.startTime != null)
@@ -122,9 +188,10 @@ class _TaskDetailContent extends StatelessWidget {
               time: task.startTime!,
               label: 'Start Time',
               icon: Icons.access_time,
-              color: cardColor,
+              color: Colors.black.withAlpha(166),
             ),
           ),
+        if (task.endTime != null) const SizedBox(width: 8),
         if (task.endTime != null)
           Expanded(
             child: TaskTimeCard(
@@ -132,19 +199,19 @@ class _TaskDetailContent extends StatelessWidget {
               time: task.endTime!,
               label: 'End Time',
               icon: Icons.timer_off,
-              color: cardColor,
+              color: Colors.black.withAlpha(166),
             ),
           ),
       ],
     );
   }
 
-  Widget _buildPropertiesRow(Color cardColor) {
+  Widget _buildPropertiesRow(BuildContext context) {
     return Row(
       children: [
         Expanded(
           child: TaskPropertyCard(
-            color: cardColor,
+            color: Colors.black.withAlpha(166),
             label: 'Category',
             child: Chip(
               label: Text(task.category, style: AppTheme.categoryTheme),
@@ -152,9 +219,10 @@ class _TaskDetailContent extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(width: 8),
         Expanded(
           child: TaskPropertyCard(
-            color: cardColor,
+            color: Colors.black.withAlpha(166),
             label: 'Priority',
             child: TaskPriorityChip(priority: task.priority, isLarge: false),
           ),
@@ -163,16 +231,16 @@ class _TaskDetailContent extends StatelessWidget {
     );
   }
 
-  Widget _buildNotesCard(Color cardColor) {
+  Widget _buildNotesCard() {
     return TaskPropertyCard(
-      color: cardColor,
+      color: Colors.black.withAlpha(166),
       label: 'Notes',
       icon: Icons.notes,
       child: Text(task.notes!, style: AppTextFonts.boldWhiteTextStyle),
     );
   }
 
-  Widget _buildCompletionButton(BuildContext context, ThemeData theme) {
+  Widget _buildCompletionButton(BuildContext context) {
     final buttonColor =
         task.isCompleted
             ? AppTheme.completeRedLight
@@ -184,19 +252,15 @@ class _TaskDetailContent extends StatelessWidget {
 
     return Container(
       padding: AppTheme.defaultPadding,
-      decoration: BoxDecoration(
-        color: theme.scaffoldBackgroundColor,
-        border: Border(top: AppTheme.defaultBorderSide),
-      ),
+      decoration: BoxDecoration(color: Colors.transparent),
       child: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
-          key: const Key('complete_button'),
           style: ElevatedButton.styleFrom(
-            padding: AppTheme.buttonPadding,
-            shape: AppTheme.roundedButtonBorder,
             backgroundColor: buttonColor,
             foregroundColor: textColor,
+            shape: AppTheme.roundedButtonBorder,
+            padding: AppTheme.buttonPadding,
           ),
           onPressed: () => _toggleCompletion(context),
           child: Row(
@@ -210,7 +274,6 @@ class _TaskDetailContent extends StatelessWidget {
               Text(
                 task.isCompleted ? 'Mark Incomplete' : 'Mark Complete',
                 style: AppTextFonts.boldWhiteTextStyle.copyWith(
-                  fontSize: 16,
                   color: textColor,
                 ),
               ),
@@ -221,40 +284,32 @@ class _TaskDetailContent extends StatelessWidget {
     );
   }
 
-  // Consider adding error handling for Hive operations
+  void _showDelete(BuildContext context) {
+    showDialog(
+      context: context,
+      builder:
+          (_) => TaskDeleteDialog(
+            task: task,
+            onDelete: () {
+              HiveService.deleteTask(task.id);
+              Navigator.pop(context);
+            },
+          ),
+    );
+  }
+
   void _toggleCompletion(BuildContext context) async {
     try {
       await HiveService.updateTask(
         task.copyWith(isCompleted: !task.isCompleted),
       );
-    } catch (e) {
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update task: ${e.toString()}')),
-      );
-    }
+    } catch (_) {}
   }
 
   void _navigateToEdit(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => EditTaskPage(task: task)),
-    ).then((success) {
-      if (success == true && context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Task updated successfully')),
-        );
-      }
-    });
-  }
-
-  Widget buildDateCard(BuildContext context, Color cardColor) {
-    return TaskDateCard(
-      context: context,
-      date: task.date,
-      label: 'Date',
-      icon: Icons.calendar_today,
-      color: cardColor,
+      MaterialPageRoute(builder: (_) => EditTaskPage(task: task)),
     );
   }
 }

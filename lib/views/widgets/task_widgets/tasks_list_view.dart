@@ -3,7 +3,6 @@ import 'package:dolphin_days/utils/task_utils.dart';
 import 'package:dolphin_days/views/widgets/sections/task_list_section.dart';
 import 'package:flutter/material.dart';
 
-
 // Main list view builder
 class TasksListView extends StatelessWidget {
   final List<TaskClass> tasks;
@@ -18,14 +17,16 @@ class TasksListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final groupedTasks = groupTasksByDate(tasks);
-    final sortedDates = groupedTasks.keys.toList()..sort((a, b) => b.compareTo(a));
+    final sortedDates =
+        groupedTasks.keys.toList()..sort((a, b) => b.compareTo(a));
 
     return ListView.builder(
+      padding: const EdgeInsets.symmetric(vertical: 8),
       itemCount: sortedDates.length,
       itemBuilder: (context, index) {
         final date = sortedDates[index];
         final dateTasks = sortTasks(groupedTasks[date]!);
-        
+
         return TaskListSection(
           date: date,
           tasks: dateTasks,

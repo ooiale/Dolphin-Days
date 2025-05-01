@@ -18,11 +18,20 @@ class CustomTextField extends StatelessWidget {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
-        labelText: labelText,
         labelStyle: AppTextFonts.boldGrayLabelStyle,
-        border: OutlineInputBorder(),
+        floatingLabelBehavior: FloatingLabelBehavior.auto,
+        labelText: labelText,
+        filled: true,
+        fillColor: Colors.white.withAlpha(100),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
       ),
-      style: AppTextFonts.boldWhiteTextStyle,
+      style: AppTextFonts.boldBlackTextStyle.copyWith(
+        fontSize: 22,
+        color: const Color(0xFF4B0082),
+      ),
       maxLines: maxLines,
     );
   }

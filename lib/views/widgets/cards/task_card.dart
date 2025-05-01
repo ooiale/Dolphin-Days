@@ -23,6 +23,7 @@ class TaskCard extends StatelessWidget {
     final taskColor = getTaskColor(task);
 
     return Card(
+      color: Colors.black.withAlpha(166),
       margin: EdgeInsets.only(top: 8),
       elevation: 0,
       shape: RoundedRectangleBorder(

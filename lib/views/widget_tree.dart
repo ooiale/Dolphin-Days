@@ -1,4 +1,4 @@
-import 'package:dolphin_days/views/pages/aquarium/aquarium_page.dart';
+import 'package:dolphin_days/features/aquarium/aquarium_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dolphin_days/views/widgets/navigation/main_page_navbar.dart';
 import 'package:flutter/services.dart';

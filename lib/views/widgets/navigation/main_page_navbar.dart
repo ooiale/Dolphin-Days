@@ -1,6 +1,6 @@
 import 'package:dolphin_days/data/themes/text_fonts.dart';
 import 'package:dolphin_days/views/pages/tasks/add_task_page.dart';
-import 'package:dolphin_days/views/pages/calendar/calendar_page.dart';
+import 'package:dolphin_days/features/calendar/calendar_page.dart';
 import 'package:dolphin_days/views/pages/tasks/task_list_page.dart';
 import 'package:flutter/material.dart';
 

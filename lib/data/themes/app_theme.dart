@@ -16,7 +16,7 @@ class AppTheme {
   static const Color categoryBlue = Color(0xFF1976D2); // ≈ Colors.blue[800]
   static const Color categoryBlueLight = Color(0xFFBBDEFB); // ≈ Colors.blue[70]
   static const Color primaryColor = Color(0xFF1976D2); // Material blue 700
-
+  static const Color appBarSeaThemedColor = Color(0xFF4F42B5);
   // Priority Colors
   static const Map<Priority, Color> priorityColors = {
     Priority.high: Colors.red,

@@ -19,31 +19,42 @@ class TimePickerRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        RichText(
-          text: TextSpan(
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextSpan(
-                text: '$timeDescription: ',
-                style: AppTextFonts.boldGrayLabelStyle,
-              ),
-              TextSpan(
-                text: selectedTime != null
+              Text('$timeDescription:', style: AppTextFonts.boldGrayLabelStyle),
+              const SizedBox(height: 4),
+              Text(
+                selectedTime != null
                     ? selectedTime!.format(context)
-                    : "Not selected",
-                style: AppTextFonts.boldWhiteTextStyle,
+                    : 'Not selected',
+                style:
+                    selectedTime == null
+                        ? AppTextFonts.boldWhiteTextStyle
+                        : AppTextFonts.boldGreenTextStyle.copyWith(
+                          fontSize: 22,
+                        ),
               ),
             ],
           ),
         ),
-        const Spacer(),
-        if (selectedTime != null) // Show clear button only when time is selected
+
+        if (selectedTime != null)
           TextButton(
             onPressed: onClearTime,
-            child: const Text('Clear', style: TextStyle(color: Colors.red)),
+            child: const Text(
+              'Clear',
+              style: TextStyle(color: Colors.red, fontSize: 16),
+            ),
           ),
+
         TextButton(
           onPressed: onSelectTime,
-          child: Text(selectedTime == null ? 'Select Time' : 'Change Time'),
+          child: Text(
+            selectedTime == null ? 'Select Time' : 'Change Time',
+            style: TextStyle(color: Colors.black, fontSize: 16),
+          ),
         ),
       ],
     );

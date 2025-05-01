@@ -7,7 +7,64 @@ import 'package:flutter/material.dart';
 import 'package:dolphin_days/data/services/task_hive_service.dart';
 import 'package:dolphin_days/data/classes/task_class.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:lottie/lottie.dart';
 
+const underwaterGradient = LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: [
+    Color(0xFF1B2A49), // Deep ocean
+    Color(0xFF3A8DAF), // Mid-water
+    Color(0xFFB4E1E8), // Surface
+  ],
+);
+
+/// A Scaffold wrapper that draws the underwater background + Lottie layers.
+class UnderwaterScaffold extends StatelessWidget {
+  final PreferredSizeWidget? appBar;
+  final Widget body;
+  final Widget? floatingActionButton;
+
+  const UnderwaterScaffold({
+    this.appBar,
+    required this.body,
+    this.floatingActionButton,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
+      appBar: appBar,
+      body: Stack(
+        children: [
+          // 1) Gradient base
+          Container(
+            decoration: const BoxDecoration(gradient: underwaterGradient),
+          ),
+
+          // 3) Bubble layer
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.3,
+              child: Lottie.asset(
+                'assets/lotties/bubbles.json',
+                fit: BoxFit.cover,
+                repeat: true,
+              ),
+            ),
+          ),
+
+          // 4) Page content
+          SafeArea(child: body),
+        ],
+      ),
+      floatingActionButton: floatingActionButton,
+    );
+  }
+}
 
 class TaskListPage extends StatefulWidget {
   const TaskListPage({super.key});
@@ -21,9 +78,10 @@ class _TaskListPageState extends State<TaskListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return UnderwaterScaffold(
       appBar: AppBar(
         title: Text('My Tasks'),
+        backgroundColor: Colors.transparent,
         actions: [
           PopupMenuButton<TaskFilter>(
             onSelected: (filter) {
@@ -31,7 +89,10 @@ class _TaskListPageState extends State<TaskListPage> {
                 _currentFilter = filter;
               });
             },
-            icon: const Icon(Icons.filter_list, color: AppTheme.filterIconColor,),
+            icon: const Icon(
+              Icons.filter_list,
+              color: AppTheme.filterIconColor,
+            ),
             iconSize: AppTheme.iconSizeLarge,
             itemBuilder: (context) {
               return [

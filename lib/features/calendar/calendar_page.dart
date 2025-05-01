@@ -3,13 +3,60 @@ import 'package:dolphin_days/data/classes/dolphin_assignment.dart';
 import 'package:dolphin_days/utils/calendar_utils.dart';
 import 'package:dolphin_days/views/widgets/calendar/day_cell.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:dolphin_days/views/pages/tasks/day_task_page.dart';
+import 'package:dolphin_days/features/calendar/day_task_page.dart';
 import 'package:dolphin_days/data/themes/app_theme.dart';
 import 'package:dolphin_days/data/classes/task_class.dart';
 import 'package:dolphin_days/data/services/task_hive_service.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:dolphin_days/data/themes/text_fonts.dart';
+
+const underwaterGradient = LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: [
+    Color(0xFF1B2A49), // Deep ocean
+    Color(0xFF3A8DAF), // Mid-water
+    Color(0xFFB4E1E8), // Surface
+  ],
+);
+
+class UnderwaterScaffold extends StatelessWidget {
+  final PreferredSizeWidget? appBar;
+  final Widget body;
+  const UnderwaterScaffold({this.appBar, required this.body, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: appBar,
+      backgroundColor: Colors.transparent,
+      body: Stack(
+        children: [
+          // 1) Gradient base
+          Container(
+            decoration: const BoxDecoration(gradient: underwaterGradient),
+          ),
+          // 3) Bubble layer
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.3,
+              child: Lottie.asset(
+                'assets/lotties/bubbles.json',
+                repeat: true,
+                animate: true,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          SafeArea(child: body),
+        ],
+      ),
+    );
+  }
+}
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -41,14 +88,16 @@ class CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return UnderwaterScaffold(
       appBar: AppBar(
         title: const Text('Calendar', style: AppTextFonts.boldWhiteTextStyle),
-        backgroundColor: AppTheme.calendarAppBar,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: ValueListenableBuilder<Box<TaskClass>>(
+      body: ValueListenableBuilder(
         valueListenable: HiveService.tasksBox.listenable(),
-        builder: (context, box, _) {
+        builder: (context, Box<TaskClass> box, _) {
           tasksByDate = groupTaskByDate(box.values.toList());
           return buildFullScreenCalendar(context);
         },

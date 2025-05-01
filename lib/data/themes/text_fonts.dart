@@ -12,6 +12,16 @@ class AppTextFonts {
     color: Colors.white,
     fontWeight: FontWeight.bold,
   );
+  static const TextStyle boldBlackTextStyle = TextStyle(
+    fontSize: 20,
+    color: Colors.black,
+    fontWeight: FontWeight.bold,
+  );
+  static const TextStyle boldGreenTextStyle = TextStyle(
+    fontSize: 20,
+    color: Colors.green,
+    fontWeight: FontWeight.bold,
+  );
   static const TextStyle cardDescriptionStyle = TextStyle(
     fontWeight: FontWeight.bold,
     fontSize: 14,
@@ -20,7 +30,7 @@ class AppTextFonts {
   static TextStyle taskDateStyle(bool allCompleted) => TextStyle(
     fontWeight: FontWeight.bold,
     fontSize: 24,
-    color: allCompleted ? Colors.green : Colors.red,
+    color: allCompleted ? const Color.fromARGB(255, 0, 255, 8) : Colors.red,
   );
   static TextStyle taskTimeStyle(Color taskColor) =>
       TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: taskColor);
