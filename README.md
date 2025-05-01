@@ -2,7 +2,7 @@
 
 <p align="center">
   <img src="assets/images/TitleLogo.png" alt="Dolphin Days Logo" width="300" />
-  <a href="https://youtube.com/shorts/xlLkMWvqyUU?feature=share" target="_blank">
+  <a href="https://www.youtube.com/watch?v=xlLkMWvqyUU" target="_blank">
     <img src="" alt="Watch Demo" width="300" />
   </a>
 </p>
